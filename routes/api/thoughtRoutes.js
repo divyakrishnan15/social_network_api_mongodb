@@ -12,7 +12,7 @@ const {
 //GET ALL, POST
 router.route('/')
 .get(getThoughts)
-// .post(createThoughts);
+.post(createThoughts);
 
 
 router.route('/:thoughtId')
@@ -21,7 +21,6 @@ router.route('/:thoughtId')
 .delete(deleteThoughts)
 
 router.route('/:userId').post(createThoughts);
-
 
 router.route('/:thoughtId/reactions').post(createReactions);
 

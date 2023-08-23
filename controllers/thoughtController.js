@@ -1,4 +1,5 @@
 const Thought  = require('../models/Thought');
+// const R  = require('../models/Reaction');
 const User  = require('../models/User');
 
  const thoughtController = {
@@ -40,7 +41,7 @@ const User  = require('../models/User');
       }
       console.log("thoughtData._id === ",thoughtData._id)
         const resultData =  await User.findOneAndUpdate(
-          {_id:params.userId},
+          {_id:body.userId},
           {$push:{thoughts:thoughtData._id}},
           {new:true}
         )
@@ -103,10 +104,10 @@ const User  = require('../models/User');
       try{
         const reactionData = await Thought.findOneAndUpdate(
           {_id:params.thoughtId},
-          { $push:{reactions:params.body}},
+          { $push:{reactions:body}},
           {runValidators : true, new:true}
         )
-        // .populate({path: 'reactions', select: '-__v'})
+        .populate( 'reactions')
 
         console.log("CREATE REACTIONS : ",reactionData)
         if(!reactionData){
