@@ -1,13 +1,13 @@
 const User = require('../models/User');
-const Thought  = require('../models/Thought');
+const Thought = require('../models/Thought');
 
 const userController ={
 
 async getUsers(req, res) {
   try {
     const users = await User.find()
-    // .populate({path:'thoughts',select:'-__v'})
-    // .populate({path:'friends',select:'-__v'})
+    // .populate('friends')
+    .populate('thoughts')
     .select('-__v');
 
     res.json(users);
@@ -36,6 +36,8 @@ async createUser({body}, res) {
 async getSingleUser(req, res) {
   try {
     const user = await User.findOne({ _id: req.params.userId })
+    .populate('thoughts')
+    .populate('friends')
       .select('-__v');
 
     if (!user) {
@@ -75,17 +77,25 @@ async updateUser({params,body},res){
 
 async deleteUser({params},res){
   try{
+    
+
     const user = await User.findOneAndDelete(
       { _id:params.userId},
       // { $pull:{_id:params.friendId}},
       { new:true }
     )
-    // .populate({path: 'friends', select: '-__v'})
     .select('-__v')
+
 
     if(!user){
       return res.status(404).json({message:'No user with this ID'})
     }
+
+    
+    const deleteThoughts = await Thought.deleteMany(
+      {username:user.username}
+    )
+
     res.json({message:'Deleted User'})
   }catch(err){
     console.log(err)

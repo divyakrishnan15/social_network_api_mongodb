@@ -43,7 +43,7 @@ userSchema
     return this.friends.length;
   })
 
-const User = model('Users', userSchema);
+const User = model('User', userSchema);
 
 
 var validateEmail = function(email) {
